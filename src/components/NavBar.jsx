@@ -1,22 +1,25 @@
 import React from "react";
 import styled from "@emotion/styled";
 import Plane from "../assets/plane-img.png";
+import { Link } from "react-router-dom";
 
 const NavBarContainer = styled.div`
-  max-width: 90%;
-  height: 6rem;
+  min-width: 90%;
+  height: 5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-inline: 3rem;
+  background-color: #dddddd;
+  margin: 0.25rem auto;
+  padding-inline: 1.5rem;
   border-radius: 0.5rem;
   box-shadow: 28px 28px 56px #a1a1a1, -28px -28px 56px #ffffff;
-  margin-bottom: 1.5rem;
 `;
 
-const Logo = styled.button`
+const Logo = styled(Link)`
   display: flex;
   gap: 0.5rem;
+  text-decoration: none;
   padding: 0.75rem 2rem;
   border-radius: 0.5rem;
   font-family: "Viaoda Libre", cursive;
@@ -25,9 +28,7 @@ const Logo = styled.button`
   color: #000000;
   font-weight: bolder;
   cursor: pointer;
-  /* background-color: #2a324b; */
   align-items: center;
-  /* color: white; */
   font-size: 1.5rem;
 `;
 
@@ -50,7 +51,7 @@ const ImgLogo = styled.img`
 export default function NavBar() {
   return (
     <NavBarContainer>
-      <Logo>
+      <Logo to={"/"}>
         <ImgLogo src={Plane} alt="" />
         Airline
       </Logo>
