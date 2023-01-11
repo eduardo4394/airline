@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import Form from "../components/form/Form";
 import { ErrorMessage } from "../components/form/formComponents";
@@ -77,6 +77,7 @@ export default function ConfirmPage() {
   const passengers = JSON.parse(sessionStorage.PASSENGERS_REGISTERED);
   const [passenger, setPassenger] = useState(passengers[0]);
   const [passsengersList, setPassengersList] = useState(passengers);
+  const [active, setActive] = useState(true);
 
   function handlePassengerSelect(data) {
     setPassenger(data);
@@ -94,10 +95,6 @@ export default function ConfirmPage() {
     setPassenger(data);
   };
 
-  const submitData = () => {
-    console.log(passengers);
-  };
-
   const deletePassenger = (passengers, passsenger) => {
     const newList = passengers.filter(
       (pass) => pass.docNum !== passsenger.docNum
@@ -109,12 +106,31 @@ export default function ConfirmPage() {
     );
   };
 
+  function activateButton() {
+    if (passengers.length > 4) {
+      setActive(false);
+    } else if (passengers.length < 1) {
+      setActive(false);
+    } else {
+      setActive(true);
+    }
+  }
+
+  //Decides if button to send data works
+  useEffect(() => {
+    activateButton();
+  }, [passengers]);
+
+  //Final data in console
+  const submitData = () => {
+    console.log(passengers);
+  };
   return (
     <Container>
       <h1>Pagina de Confirmacion</h1>
       <p>
         Puedes editar la informacion de los pasajeros o borrarla e ingresar una
-        nueva
+        nueva, para eliminar un pasajero click en la ❌
       </p>
       <PassengersNav>
         {passengers.map((passenger) => {
@@ -141,9 +157,13 @@ export default function ConfirmPage() {
           <p style={{ fontSize: "1.25rem", fontWeight: "bolder" }}>
             Presiona este boton para finalizar 😊
           </p>
-          <ConfirmButton onClick={submitData}>Confirmar ✅</ConfirmButton>
-          {passengers.length > 4 ? (
-            <ErrorMessage>No puedes registrar mas de 4 pasajeros</ErrorMessage>
+          <ConfirmButton disabled={!active} onClick={submitData}>
+            Confirmar ✅
+          </ConfirmButton>
+          {passengers.length > 4 || passengers.length < 1 ? (
+            <ErrorMessage>
+              No puedes registrar mas de 4 pasajeros ni menos de 1
+            </ErrorMessage>
           ) : (
             ""
           )}
