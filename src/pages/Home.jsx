@@ -8,7 +8,7 @@ import { ErrorMessage } from "../components/form/formComponents";
 
 const PageContainer = styled.div`
   display: flex;
-  gap: 1.25rem;
+  gap: 2.5rem;
   max-width: 90%;
   justify-content: space-evenly;
   flex-wrap: wrap;
@@ -16,6 +16,10 @@ const PageContainer = styled.div`
   @media ${QUERIES.tabletAndSmaller} {
     justify-content: flex-start;
     gap: 2.25rem;
+  }
+  @media ${QUERIES.phoneAndSmaller} {
+    justify-content: center;
+    gap: 2rem;
   }
 `;
 
@@ -26,7 +30,8 @@ const PassengerList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  padding: 0;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #228cdb;
 `;
 
 const BigText = styled.p`
@@ -43,7 +48,7 @@ const NextPageContainer = styled.div`
   width: 200px;
   gap: 1rem;
   @media ${QUERIES.tabletAndSmaller} {
-    width: 100%;
+    width: 290px;
   }
 `;
 
@@ -72,8 +77,13 @@ const StyledList = styled.li`
   cursor: context-menu;
 `;
 
-const Delete = styled.span`
+export const Delete = styled.span`
   cursor: pointer;
+`;
+
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 function capitalize(string) {
@@ -123,58 +133,56 @@ export default function Home() {
   };
 
   return (
-    <div>
-      <PageContainer>
-        <div style={{ maxWidth: "90%" }}>
-          <h2 style={{ marginBottom: "1.5rem" }}>Registro de pasajeros</h2>
-          <Form onSubmit={getData} />
-        </div>
+    <PageContainer>
+      <FormContainer>
+        <h2 style={{ marginBottom: "1.5rem" }}>Registro de pasajeros</h2>
+        <Form onSubmit={getData} />
+      </FormContainer>
+      <div>
         <div>
-          <div>
-            <h2>Pasajeros registrados</h2>
-            <p>Puedes eliminar un pasajero apretando la ❌</p>
-          </div>
-          <PassengerList>
-            {passengers.length > 0 ? (
-              passengers.map((passenger) => {
-                return (
-                  <StyledList key={passenger.docNum}>
-                    {`${capitalize(passenger.name)} ${capitalize(
-                      passenger.lastName
-                    )} ✔️`}
-                    <Delete
-                      onClick={() => DeletePassenger(passengers, passenger)}
-                    >
-                      ❌
-                    </Delete>
-                  </StyledList>
-                );
-              })
-            ) : (
-              <p style={{ color: "gray" }}>No hay pasajeros registrados aún</p>
-            )}
-          </PassengerList>
+          <h2>Pasajeros registrados</h2>
+          <p>Puedes eliminar un pasajero apretando la ❌</p>
         </div>
-        <NextPageContainer>
-          <BigText>Si estas listo para continuar click en siguiente ⬇️</BigText>
-          <NextPageButton
-            to={"/confirm"}
-            style={{
-              pointerEvents:
-                passengers.length > 4 || passengers.length < 1 ? "none" : "",
-            }}
-          >
-            SIGUIENTE
-          </NextPageButton>
-          {active ? (
-            <ErrorMessage>
-              Se necesita registrar 1 pasajero minimo y maximo 4
-            </ErrorMessage>
+        <PassengerList>
+          {passengers.length > 0 ? (
+            passengers.map((passenger) => {
+              return (
+                <StyledList key={passenger.docNum}>
+                  {`${capitalize(passenger.name)} ${capitalize(
+                    passenger.lastName
+                  )} ✔️`}
+                  <Delete
+                    onClick={() => DeletePassenger(passengers, passenger)}
+                  >
+                    ❌
+                  </Delete>
+                </StyledList>
+              );
+            })
           ) : (
-            ""
+            <p style={{ color: "gray" }}>No hay pasajeros registrados aún</p>
           )}
-        </NextPageContainer>
-      </PageContainer>
-    </div>
+        </PassengerList>
+      </div>
+      <NextPageContainer>
+        <BigText>Si estas listo para continuar click en siguiente ⬇️</BigText>
+        <NextPageButton
+          to={"/confirm"}
+          style={{
+            pointerEvents:
+              passengers.length > 4 || passengers.length < 1 ? "none" : "",
+          }}
+        >
+          SIGUIENTE
+        </NextPageButton>
+        {active ? (
+          <ErrorMessage>
+            Se necesita registrar 1 pasajero minimo y maximo 4
+          </ErrorMessage>
+        ) : (
+          ""
+        )}
+      </NextPageContainer>
+    </PageContainer>
   );
 }

@@ -14,13 +14,22 @@ import {
 } from "./formComponents";
 
 export default function Form(props) {
-  const initialValues = {
-    name: "",
-    lastName: "",
-    nationality: "",
-    docType: "dni",
-    docNum: "",
-  };
+  let initialValues = {};
+  !props.data
+    ? (initialValues = {
+        name: "",
+        lastName: "",
+        nationality: "",
+        docType: "dni",
+        docNum: "",
+      })
+    : (initialValues = {
+        name: props.data.name,
+        lastName: props.data.lastName,
+        nationality: props.data.nationality,
+        docType: props.data.docType,
+        docNum: props.data.docNum,
+      });
 
   const [form, setForm] = useState({
     values: initialValues,
@@ -49,8 +58,7 @@ export default function Form(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     props.onSubmit(values);
-    setForm((prev) => ({
-      ...prev,
+    setForm(() => ({
       values: {
         name: "",
         lastName: "",
@@ -62,9 +70,15 @@ export default function Form(props) {
       touched: {},
     }));
   };
+
+  const editPassenger = (e) => {
+    e.preventDefault();
+    props.onSubmit(props.data, values);
+  };
+
   return (
     <FormContainer>
-      <FormRegister onSubmit={handleSubmit}>
+      <FormRegister onSubmit={!props.data ? handleSubmit : editPassenger}>
         <BoxInput>
           <InputContainer>
             <label htmlFor="name">Nombre:</label>

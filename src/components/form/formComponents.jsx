@@ -74,13 +74,13 @@ export function validate(values) {
 
   if (values.name === "") {
     errors.name = "Campo requerido";
-  } else if (!/^[a-zñáéíóúüA-Z ]+$/.test(values.name)) {
+  } else if (!/^[a-zñáéíóúüA-Z '.]+$/.test(values.name)) {
     errors.name = "Solo letras";
   }
 
   if (values.lastName === "") {
     errors.lastName = "Campo requerido";
-  } else if (!/^[a-zñáéíóúüA-Z ]+$/.test(values.lastName)) {
+  } else if (!/^[a-zñáéíóúüA-Z '.]+$/.test(values.lastName)) {
     errors.lastName = "Solo letras";
   }
 
