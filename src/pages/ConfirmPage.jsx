@@ -1,17 +1,17 @@
 import styled from "@emotion/styled";
 import React, { useEffect } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Form from "../components/form/Form";
 import { ErrorMessage } from "../components/form/formComponents";
+import { QUERIES } from "../constants";
 import { Delete } from "./Home";
 
 const Container = styled.div`
-  max-width: 100%;
+  max-width: 90%;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  justify-content: space-between;
-  gap: 0.75rem;
 `;
 
 const PassengersNav = styled.div`
@@ -56,9 +56,11 @@ const ConfirmButton = styled.button`
 
 const BodyContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  gap: 4rem;
+  gap: 8rem;
   flex-wrap: wrap;
+  @media ${QUERIES.tabletAndSmaller} {
+    gap: 1.5rem;
+  }
 `;
 
 const Box = styled.div`
@@ -74,6 +76,8 @@ function capitalize(string) {
 }
 
 export default function ConfirmPage() {
+  const navigate = useNavigate();
+
   const passengers = JSON.parse(sessionStorage.PASSENGERS_REGISTERED);
   const [passenger, setPassenger] = useState(passengers[0]);
   const [passsengersList, setPassengersList] = useState(passengers);
@@ -124,6 +128,8 @@ export default function ConfirmPage() {
   //Final data in console
   const submitData = () => {
     console.log(passengers);
+    window.sessionStorage.clear("PASSENGERS_REGISTERED");
+    navigate("/success");
   };
   return (
     <Container>
