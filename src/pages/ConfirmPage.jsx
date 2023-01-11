@@ -58,6 +58,7 @@ const BodyContainer = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 4rem;
+  flex-wrap: wrap;
 `;
 
 const Box = styled.div`
@@ -65,6 +66,7 @@ const Box = styled.div`
   gap: 1rem;
   flex-direction: column;
   justify-content: center;
+  width: 200px;
 `;
 
 function capitalize(string) {
@@ -136,8 +138,8 @@ export default function ConfirmPage() {
       <BodyContainer>
         <Form data={passenger} onSubmit={handleSubmit} />
         <Box>
-          <p style={{ fontSize: "1.25rem" }}>
-            Presiona este boton para finalizar
+          <p style={{ fontSize: "1.25rem", fontWeight: "bolder" }}>
+            Presiona este boton para finalizar 😊
           </p>
           <ConfirmButton onClick={submitData}>Confirmar ✅</ConfirmButton>
           {passengers.length > 4 ? (
