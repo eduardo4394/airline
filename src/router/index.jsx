@@ -3,6 +3,7 @@ import Home from "../pages/Home";
 import ConfirmPage from "../pages/ConfirmPage";
 import ErrorPage from "../pages/ErrorPage";
 import Root from "../layout/Root";
+import SuccesPage from "../pages/SuccesPage";
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
       {
         path: "/confirm",
         element: <ConfirmPage />,
+      },
+      {
+        path: "/success",
+        element: <SuccesPage />,
       },
     ],
   },
