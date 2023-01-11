@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Form from "../components/form/Form";
 import { Link } from "react-router-dom";
 import { QUERIES } from "../constants";
+import { ErrorMessage } from "../components/form/formComponents";
 
 const PageContainer = styled.div`
   display: flex;
@@ -19,7 +20,7 @@ const PageContainer = styled.div`
 `;
 
 const PassengerList = styled.ul`
-  margin-top: 0.75rem;
+  margin-top: 1.25rem;
   text-decoration: none;
   list-style: none;
   display: flex;
@@ -30,6 +31,9 @@ const PassengerList = styled.ul`
 
 const BigText = styled.p`
   font-size: 1.5rem;
+  @media ${QUERIES.tabletAndSmaller} {
+    font-size: 1.25rem;
+  }
 `;
 
 const NextPageContainer = styled.div`
@@ -38,6 +42,9 @@ const NextPageContainer = styled.div`
   flex-direction: column;
   width: 200px;
   gap: 1rem;
+  @media ${QUERIES.tabletAndSmaller} {
+    width: 100%;
+  }
 `;
 
 const NextPageButton = styled(Link)`
@@ -52,25 +59,68 @@ const NextPageButton = styled(Link)`
   color: white;
 `;
 
+const StyledList = styled.li`
+  background-color: #228cdb;
+  display: flex;
+  gap: 0.75rem;
+  border-radius: 0.25rem;
+  color: white;
+  width: fit-content;
+  align-items: center;
+  align-content: center;
+  padding: 0.25rem 0.5rem;
+  cursor: context-menu;
+`;
+
+const Delete = styled.span`
+  cursor: pointer;
+`;
+
 function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export default function Home() {
   const [passengers, setPassengers] = useState([]);
-  let savedPassengers = [];
+  const [active, setActive] = useState(false);
 
-  //Bring data from passenger created in form
-  const getData = async (data) => {
-    setPassengers([...passengers, data]);
-    sessionStorage.setItem("passengers", JSON.stringify(passengers));
-    savedPassengers = await JSON.parse(sessionStorage.passengers);
-    console.log(savedPassengers);
-    console.log(passengers);
+  //Save passsengers data in sessionStorage
+  useEffect(() => {
+    const data = window.sessionStorage.getItem("PASSENGERS_REGISTERED");
+    if (data !== null) setPassengers(JSON.parse(data));
+  }, []);
+
+  //Validate number of passengers to pass to next page
+  useEffect(() => {
+    if (passengers.length <= 0) {
+      setActive(true);
+    } else if (passengers.length > 4) {
+      setActive(true);
+    } else {
+      setActive(false);
+    }
+  }, [passengers]);
+
+  const DeletePassenger = (passengers, passsenger) => {
+    const newList = passengers.filter(
+      (pass) => pass.docNum !== passsenger.docNum
+    );
+    setPassengers(newList);
+    window.sessionStorage.setItem(
+      "PASSENGERS_REGISTERED",
+      JSON.stringify(newList)
+    );
   };
-  // passengers.length > 0
-  //   ? (savedPassengers = JSON.parse(sessionStorage.passengers))
-  //   : "";
+
+  //Bring data from passenger created in form and save data in sessionStorage
+  const getData = (data) => {
+    const newValues = [...passengers, data];
+    setPassengers(newValues);
+    window.sessionStorage.setItem(
+      "PASSENGERS_REGISTERED",
+      JSON.stringify(newValues)
+    );
+  };
 
   return (
     <div>
@@ -82,16 +132,22 @@ export default function Home() {
         <div>
           <div>
             <h2>Pasajeros registrados</h2>
+            <p>Puedes eliminar un pasajero apretando la ❌</p>
           </div>
           <PassengerList>
             {passengers.length > 0 ? (
               passengers.map((passenger) => {
                 return (
-                  <li key={passenger.docNum}>
+                  <StyledList key={passenger.docNum}>
                     {`${capitalize(passenger.name)} ${capitalize(
                       passenger.lastName
-                    )}`}
-                  </li>
+                    )} ✔️`}
+                    <Delete
+                      onClick={() => DeletePassenger(passengers, passenger)}
+                    >
+                      ❌
+                    </Delete>
+                  </StyledList>
                 );
               })
             ) : (
@@ -102,15 +158,21 @@ export default function Home() {
         <NextPageContainer>
           <BigText>Si estas listo para continuar click en siguiente ⬇️</BigText>
           <NextPageButton
+            to={"/confirm"}
             style={{
               pointerEvents:
-                passengers.length < 1 && passengers.length > 4 ? "none" : "",
+                passengers.length > 4 || passengers.length < 1 ? "none" : "",
             }}
-            to={"/confirm"}
-            state={savedPassengers}
           >
             SIGUIENTE
           </NextPageButton>
+          {active ? (
+            <ErrorMessage>
+              Se necesita registrar 1 pasajero minimo y maximo 4
+            </ErrorMessage>
+          ) : (
+            ""
+          )}
         </NextPageContainer>
       </PageContainer>
     </div>

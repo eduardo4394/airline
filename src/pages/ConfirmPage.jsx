@@ -1,10 +1,7 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 
 export default function ConfirmPage() {
-  const data = useLocation();
-  const passengers = data.state;
-  console.log(passengers);
+  const passengers = JSON.parse(sessionStorage.PASSENGERS_REGISTERED);
 
   return (
     <div style={{ minHeight: "80vh" }}>

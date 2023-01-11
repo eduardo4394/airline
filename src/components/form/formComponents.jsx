@@ -28,6 +28,7 @@ export const BoxInput = styled.div`
 
 export const ErrorMessage = styled.p`
   color: red;
+  font-size: 0.75rem;
 `;
 
 export const InputContainer = styled.div`
@@ -73,13 +74,13 @@ export function validate(values) {
 
   if (values.name === "") {
     errors.name = "Campo requerido";
-  } else if (!/^[a-zA-Z]+$/.test(values.name)) {
+  } else if (!/^[a-zñáéíóúüA-Z ]+$/.test(values.name)) {
     errors.name = "Solo letras";
   }
 
   if (values.lastName === "") {
     errors.lastName = "Campo requerido";
-  } else if (!/^[a-zA-Z]+$/.test(values.lastName)) {
+  } else if (!/^[a-zñáéíóúüA-Z ]+$/.test(values.lastName)) {
     errors.lastName = "Solo letras";
   }
 
